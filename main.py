@@ -21,20 +21,21 @@ mainbuttonheight = screenheight / 7
 intmainbuttonheight = int(mainbuttonheight)
 mainbuttonx = screenwidth / 10
 mainbuttonwidth = screenwidth - mainbuttonx * 2
+bigbuttonheight = mainbuttonheight * 1.3
+intbigbuttonheight = int(bigbuttonheight)
+bigbuttonwidth = mainbuttonwidth * 1.15
+bigbuttonx = screenwidth / 2 - bigbuttonwidth / 2
+bigbuttonbasicy = mainbuttonheight * 1.5 - bigbuttonheight / 2
+
 
 setting = False
+setting2 = False
+setting3 = False
 main_screen = True
+main_screen2 = False
 
 font = pygame.font.Font("data\DNF.otf", intmainbuttonheight)
-
-
-def resolutionscreen():
-    global main_screen
-    global setting
-    resolution = True
-    main_screen = False
-    setting = False
-
+bigfont = pygame.font.Font("data\DNF.otf", intbigbuttonheight)
 
 screen = pygame.display.set_mode((screenwidth, screenheight))
 
@@ -63,73 +64,10 @@ main_buttons = [
 ]
 
 setting_buttons = [
-    Button("screen resolution", mainbuttonx, mainbuttonheight * 1, mainbuttonwidth, mainbuttonheight, 1),
-    Button("sound", mainbuttonx, mainbuttonheight * 3, mainbuttonwidth, mainbuttonheight, 3),
+    Button("screen setting", mainbuttonx, mainbuttonheight * 1, mainbuttonwidth, mainbuttonheight, 1),
+    Button("sound setting", mainbuttonx, mainbuttonheight * 3, mainbuttonwidth, mainbuttonheight, 3),
     Button("back", mainbuttonx, mainbuttonheight * 5, mainbuttonwidth, mainbuttonheight, 5),
 ]
-
-
-def maingame():
-    global main_screen
-    global setting
-    while main_screen:
-        mouse = pygame.mouse.get_pos()
-        for button, event in main_buttons, events:
-            pygame.draw.rect(screen, white, button.rect)
-            textsurface = font.render(button.name, True, black)
-            screen.blit(textsurface, (mainbuttonx, mainbuttonheight * button.number))
-            if button.x + button.width >= mouse[0] >= button.x and button.y + button.height >= mouse[1] >= button.y and \
-                    event.type == pygame.MOUSEBUTTONDOWN:
-                if mainbuttonheight * 1 <= button.y <= mainbuttonheight * 2:
-                    print("1")
-                elif mainbuttonheight * 5 <= button.y <= mainbuttonheight * 6:
-                    screen.fill(black)
-                    main_screen = False
-                    setting = True
-                    settinggame()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                exit()
-                quit()
-        pygame.display.update()
-
-
-def settinggame():
-    global setting
-    global main_screen
-    while setting:
-        pygame.display.update()
-        mouse = pygame.mouse.get_pos()
-        click = pygame.MOUSEBUTTONUP
-        for button in setting_buttons:
-            screen.fill(black)
-            pygame.draw.rect(screen, white, button.rect)
-            textsurface = font.render(button.name, True, black)
-            screen.blit(textsurface, (mainbuttonx, mainbuttonheight * button.number))
-            if button.x + button.width >= mouse[0] >= button.x and button.y + button.height >= mouse[1] >= button.y and \
-                    click[0]:
-                if mainbuttonheight * 1 <= button.y <= mainbuttonheight * 2:
-                    print("1")
-                elif mainbuttonheight * 3 <= button.y <= mainbuttonheight * 4:
-                    main_screen = False
-                    setting = True
-                elif mainbuttonheight * 5 <= button.y <= mainbuttonheight * 6:
-                    screen.fill(black)
-                    setting = False
-                    main_screen = True
-                    maingame()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                exit()
-                quit()
-
-
-maingame()
-
-with open("data\key.json", "w") as outfile:
-    json.dump(key, outfile)
 
 
 class Key():
@@ -142,3 +80,232 @@ class Key():
 keys = [
     Key(100, 0, (0, 0, 0))
 ]
+
+with open("data\key.json", "w") as outfile:
+    json.dump(key, outfile)
+
+
+def maingame():
+    global main_screen
+    global main_screen2
+    global setting
+    screen.fill(black)
+    main_screen2 = False
+    setting = False
+    while main_screen:
+        for event in pygame.event.get():
+            for button in main_buttons:
+                selectnum = 0
+                yplace = selectnum
+                bigbuttony = bigbuttonbasicy + mainbuttonheight * yplace
+                pygame.draw.rect(screen, white, button.rect)
+                textsurface = font.render(button.name, True, black)
+                screen.blit(textsurface, (mainbuttonx, mainbuttonheight * button.number))
+                firstsels = [button for button in main_buttons if button.number == 1]
+                for firstsel in firstsels:
+                    pygame.draw.rect(screen, white, (bigbuttonx, bigbuttony, bigbuttonwidth, bigbuttonheight))
+                    bigtextsurface = bigfont.render(firstsel.name, True, black)
+                    screen.blit(bigtextsurface, (bigbuttonx, bigbuttony))
+                pygame.display.update()
+
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
+                main_screen2 = True
+                maingame2()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
+                main_screen2 = True
+                maingame2()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                main_screen2 = True
+
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+                quit()
+
+
+def maingame2():
+    global main_screen
+    global main_screen2
+    global setting
+    screen.fill(black)
+    main_screen = False
+    setting = False
+    while main_screen2:
+        for event in pygame.event.get():
+            for button in main_buttons:
+                selectnum = 4
+                yplace = selectnum
+                bigbuttony = bigbuttonbasicy + mainbuttonheight * yplace
+                pygame.draw.rect(screen, white, button.rect)
+                textsurface = font.render(button.name, True, black)
+                screen.blit(textsurface, (mainbuttonx, mainbuttonheight * button.number))
+                secondsels = [button for button in main_buttons if button.number == 5]
+                for secondsel in secondsels:
+                        pygame.draw.rect(screen, white, (bigbuttonx, bigbuttony, bigbuttonwidth, bigbuttonheight))
+                        bigtextsurface = bigfont.render(secondsel.name, True, black)
+                        screen.blit(bigtextsurface, (bigbuttonx, bigbuttony))
+                pygame.display.update()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
+                main_screen = True
+                maingame()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
+                main_screen = True
+                maingame()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                setting = True
+                settinggame()
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+                quit()
+
+
+def settinggame():
+    global setting
+    global setting2
+    global setting3
+    global main_screen
+    global main_screen2
+    screen.fill(black)
+    main_screen = False
+    main_screen2 = False
+    setting2 = False
+    setting3 = False
+    while setting:
+        for event in pygame.event.get():
+            for button in setting_buttons:
+                selectnum = 0
+                yplace = selectnum
+                bigbuttony = bigbuttonbasicy + mainbuttonheight * yplace
+                pygame.draw.rect(screen, white, button.rect)
+                textsurface = font.render(button.name, True, black)
+                screen.blit(textsurface, (mainbuttonx, mainbuttonheight * button.number))
+                firstsels = [button for button in setting_buttons if button.number == 1]
+                for firstsel in firstsels:
+                    pygame.draw.rect(screen, white, (bigbuttonx, bigbuttony, bigbuttonwidth, bigbuttonheight))
+                    bigtextsurface = bigfont.render(firstsel.name, True, black)
+                    screen.blit(bigtextsurface, (bigbuttonx, bigbuttony))
+                pygame.display.update()
+
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
+                setting2 = True
+                settinggame2()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
+                setting3 = True
+                settinggame3()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                main_screen2 = True
+                maingame2()
+
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+                quit()
+
+
+def settinggame2():
+    global setting
+    global setting2
+    global setting3
+    global main_screen
+    global main_screen2
+    screen.fill(black)
+    main_screen = False
+    main_screen2 = False
+    setting = False
+    setting3 = False
+    while setting2:
+        for event in pygame.event.get():
+            for button in setting_buttons:
+                selectnum = 2
+                yplace = selectnum
+                bigbuttony = bigbuttonbasicy + mainbuttonheight * yplace
+                pygame.draw.rect(screen, white, button.rect)
+                textsurface = font.render(button.name, True, black)
+                screen.blit(textsurface, (mainbuttonx, mainbuttonheight * button.number))
+                secondsels = [button for button in setting_buttons if button.number == 3]
+                for secondsel in secondsels:
+                    pygame.draw.rect(screen, white, (bigbuttonx, bigbuttony, bigbuttonwidth, bigbuttonheight))
+                    bigtextsurface = bigfont.render(secondsel.name, True, black)
+                    screen.blit(bigtextsurface, (bigbuttonx, bigbuttony))
+                pygame.display.update()
+
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
+                setting3 = True
+                settinggame3()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
+                setting = True
+                settinggame()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                main_screen2 = True
+                maingame2()
+
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+                quit()
+
+
+def settinggame3():
+    global setting
+    global setting2
+    global setting3
+    global main_screen
+    global main_screen2
+    screen.fill(black)
+    main_screen = False
+    main_screen2 = False
+    setting = False
+    setting2 = False
+    while setting3:
+        for event in pygame.event.get():
+            for button in setting_buttons:
+                selectnum = 4
+                yplace = selectnum
+                bigbuttony = bigbuttonbasicy + mainbuttonheight * yplace
+                pygame.draw.rect(screen, white, button.rect)
+                textsurface = font.render(button.name, True, black)
+                screen.blit(textsurface, (mainbuttonx, mainbuttonheight * button.number))
+                thirdsels = [button for button in setting_buttons if button.number == 5]
+                for thirdsel in thirdsels:
+                    pygame.draw.rect(screen, white, (bigbuttonx, bigbuttony, bigbuttonwidth, bigbuttonheight))
+                    bigtextsurface = bigfont.render(thirdsel.name, True, black)
+                    screen.blit(bigtextsurface, (bigbuttonx, bigbuttony))
+                pygame.display.update()
+
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
+                setting = True
+                settinggame()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
+                setting2 = True
+                settinggame2()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                main_screen2 = True
+                maingame2()
+
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+                quit()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+maingame()
