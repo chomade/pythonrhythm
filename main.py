@@ -1,7 +1,9 @@
 import json
 from scenes import *
 
-
+pygame.init()
+screen.fill(black)
+maingame()
 
 key = {
     "First": pygame.K_d,
@@ -22,4 +24,3 @@ with open("data\key.json", "w") as outfile:
 
 
 
-maingame()

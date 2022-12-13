@@ -25,7 +25,6 @@ bigfont = pygame.font.Font("data\DNF.otf", bigfontsize)
 
 
 events = pygame.event.get()
-screen.fill(black)
 
 def maingame():
     global main_screen
@@ -314,6 +313,5 @@ def screengame():
                 quit()
 
 
-maingame()
 
 
